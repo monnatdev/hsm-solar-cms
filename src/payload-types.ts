@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    posts: Post;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +79,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -160,6 +162,107 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    hero?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * บทความและข่าวสาร HSM Solar
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: string;
+  title: string;
+  /**
+   * URL path เช่น solar-cell-guide — auto-generate จาก title (ภาษาอังกฤษเท่านั้น)
+   */
+  slug: string;
+  /**
+   * แสดงในการ์ดบทความและ SEO meta description (ไม่เกิน 160 ตัวอักษร)
+   */
+  excerpt?: string | null;
+  category?: ('ข่าวสาร' | 'เทคโนโลยี' | 'ประหยัดพลังงาน' | 'กรณีศึกษา' | 'คู่มือ' | 'โปรโมชัน') | null;
+  image: string | Media;
+  /**
+   * ข้อความอธิบายรูปสำหรับ accessibility และ SEO
+   */
+  imageAlt?: string | null;
+  author?: string | null;
+  /**
+   * เช่น "5 นาที" หรือ "10 min read"
+   */
+  readTime?: string | null;
+  publishedAt?: string | null;
+  /**
+   * แสดงใน Featured section หน้า Blog — ควรเลือกเพียง 1 บทความ
+   */
+  featured?: boolean | null;
+  /**
+   * ตัวเลขน้อยแสดงก่อน
+   */
+  order?: number | null;
+  /**
+   * รองรับ heading, bold, italic, list, link, blockquote, code, รูปภาพ inline
+   */
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * ปล่อยว่างเพื่อใช้ชื่อบทความและ excerpt อัตโนมัติ
+   */
+  meta?: {
+    /**
+     * Override title สำหรับ Google (ปล่อยว่างเพื่อใช้ชื่อบทความ)
+     */
+    title?: string | null;
+    /**
+     * Override description สำหรับ Google (ปล่อยว่างเพื่อใช้ excerpt)
+     */
+    description?: string | null;
+    /**
+     * Override รูปสำหรับ Facebook/LINE share (ปล่อยว่างเพื่อใช้รูปปก)
+     */
+    ogImage?: (string | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -192,6 +295,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'posts';
+        value: string | Post;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -274,6 +381,67 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        hero?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  excerpt?: T;
+  category?: T;
+  image?: T;
+  imageAlt?: T;
+  author?: T;
+  readTime?: T;
+  publishedAt?: T;
+  featured?: T;
+  order?: T;
+  content?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        ogImage?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
