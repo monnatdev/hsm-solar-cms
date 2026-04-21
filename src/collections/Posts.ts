@@ -4,9 +4,11 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000'
 const REVALIDATE_SECRET = process.env.REVALIDATE_SECRET || ''
 
 async function triggerRevalidate() {
+  console.log('[revalidate] FRONTEND_URL:', FRONTEND_URL)
+  console.log('[revalidate] secret set:', !!REVALIDATE_SECRET)
   if (!REVALIDATE_SECRET) return
   try {
-    await fetch(`${FRONTEND_URL}/api/revalidate`, {
+    const res = await fetch(`${FRONTEND_URL}/api/revalidate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -14,8 +16,9 @@ async function triggerRevalidate() {
       },
       body: JSON.stringify({ collection: 'posts' }),
     })
-  } catch {
-    // non-critical — CMS still saves normally
+    console.log('[revalidate] status:', res.status)
+  } catch (err) {
+    console.error('[revalidate] fetch error:', err)
   }
 }
 
