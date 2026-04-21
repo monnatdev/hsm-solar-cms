@@ -1,7 +1,30 @@
 import type { CollectionConfig } from 'payload'
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000'
+const REVALIDATE_SECRET = process.env.REVALIDATE_SECRET || ''
+
+async function triggerRevalidate() {
+  if (!REVALIDATE_SECRET) return
+  try {
+    await fetch(`${FRONTEND_URL}/api/revalidate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-revalidate-secret': REVALIDATE_SECRET,
+      },
+      body: JSON.stringify({ collection: 'posts' }),
+    })
+  } catch {
+    // non-critical — CMS still saves normally
+  }
+}
+
 export const Posts: CollectionConfig = {
   slug: 'posts',
+  hooks: {
+    afterChange: [() => triggerRevalidate()],
+    afterDelete: [() => triggerRevalidate()],
+  },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'featured', 'publishedAt', 'order'],
