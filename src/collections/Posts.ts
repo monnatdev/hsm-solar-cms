@@ -34,10 +34,33 @@ export const Posts: CollectionConfig = {
     description: 'บทความและข่าวสาร HSM Solar',
   },
   access: {
-    read: () => true,
+    read: ({ req }) =>
+      req.user
+        ? true
+        : {
+            or: [
+              { status: { equals: 'published' } },
+              { status: { exists: false } },
+            ],
+          },
   },
   fields: [
     // ── Core ──────────────────────────────────────────────────
+    {
+      name: 'status',
+      type: 'select',
+      label: 'สถานะ',
+      defaultValue: 'published',
+      required: true,
+      options: [
+        { label: 'ฉบับร่าง (Draft)', value: 'draft' },
+        { label: 'เผยแพร่แล้ว (Published)', value: 'published' },
+      ],
+      admin: {
+        position: 'sidebar',
+        description: 'Draft = ไม่แสดงบนเว็บ | Published = แสดงสาธารณะ',
+      },
+    },
     {
       name: 'title',
       type: 'text',
