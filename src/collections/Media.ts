@@ -9,8 +9,10 @@ export const Media: CollectionConfig = {
     {
       name: 'alt',
       type: 'text',
-      required: true,
-      label: 'Alt text (SEO & accessibility)',
+      label: 'Alt text (ไม่บังคับ)',
+      admin: {
+        description: 'สำหรับบทความ ให้กรอก imageAlt ในหน้าเขียนบทความแทน — อันนั้นคือที่ใช้จริงบนเว็บ',
+      },
     },
   ],
   upload: {

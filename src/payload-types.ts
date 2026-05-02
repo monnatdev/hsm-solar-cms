@@ -150,7 +150,11 @@ export interface User {
  */
 export interface Media {
   id: string;
-  alt: string;
+  /**
+   * สำหรับบทความ ให้กรอก imageAlt ในหน้าเขียนบทความแทน — อันนั้นคือที่ใช้จริงบนเว็บ
+   */
+  alt?: string | null;
+  prefix?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -197,6 +201,10 @@ export interface Media {
  */
 export interface Post {
   id: string;
+  /**
+   * Draft = ไม่แสดงบนเว็บ | Published = แสดงสาธารณะ
+   */
+  status: 'draft' | 'published';
   title: string;
   /**
    * URL path เช่น solar-cell-guide — auto-generate จาก title (ภาษาอังกฤษเท่านั้น)
@@ -370,6 +378,7 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  prefix?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -421,6 +430,7 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
+  status?: T;
   title?: T;
   slug?: T;
   excerpt?: T;
