@@ -253,6 +253,16 @@ export interface Post {
     [k: string]: unknown;
   } | null;
   /**
+   * FAQ จะถูก generate เป็น FAQPage Schema (JSON-LD) อัตโนมัติ — ช่วยให้ติด Rich Result บน Google
+   */
+  faq?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
    * ปล่อยว่างเพื่อใช้ชื่อบทความและ excerpt อัตโนมัติ
    */
   meta?: {
@@ -443,6 +453,13 @@ export interface PostsSelect<T extends boolean = true> {
   featured?: T;
   order?: T;
   content?: T;
+  faq?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
   meta?:
     | T
     | {

@@ -188,6 +188,30 @@ export const Posts: CollectionConfig = {
       },
     },
 
+    // ── FAQ (JSON-LD Schema) ──────────────────────────────────
+    {
+      name: 'faq',
+      type: 'array',
+      label: 'FAQ (คำถาม-คำตอบ)',
+      admin: {
+        description: 'FAQ จะถูก generate เป็น FAQPage Schema (JSON-LD) อัตโนมัติ — ช่วยให้ติด Rich Result บน Google',
+      },
+      fields: [
+        {
+          name: 'question',
+          type: 'text',
+          required: true,
+          label: 'คำถาม',
+        },
+        {
+          name: 'answer',
+          type: 'textarea',
+          required: true,
+          label: 'คำตอบ',
+        },
+      ],
+    },
+
     // ── SEO ───────────────────────────────────────────────────
     {
       name: 'meta',
